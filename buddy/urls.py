@@ -22,7 +22,16 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('', views.buddy, name='buddy-home'),
+    # path('', views.buddy, name='buddy-home'),
+    path('', views.BoardListView.as_view(), name="BoardList"),
+    path('boards/<int:pk>/', views.TopicListView.as_view(), name="TopicList"),
+    path('boards/<int:pk>/new/', views.TopicCreateView.as_view(), name="NewTopic"),
+    path('boards/<int:pk>/topics/<int:topic_pk>/',
+         views.TopicPostsView.as_view(), name="TopicPosts"),
+    path('boards/<int:pk>/topics/<int:topic_pk>/edit/<int:post_pk>/',
+         views.PostUpdateView.as_view(), name="PostUpdate"),
+    path('boards/<int:pk>/topics/<int:topic_pk>/reply/',
+         views.PostReplyView.as_view(), name="PostReply"),
 
 ]
 

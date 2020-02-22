@@ -1,0 +1,77 @@
+{% extends 'example_app/base.html' %}
+{% load crispy_forms_tags %}
+
+<style type="text/css">
+.container-name div {
+    display: inline-block;
+	width: 500px;
+	min-height: 50px;
+	background-color: #eee;
+	height: auto;
+  }
+</style>
+
+
+{% block content %}
+<div class="container-name">
+	<div class="col-md-14">
+		<article class='media content-section'>
+		  <div class="media">
+		    <img class="rounded-circle account-img" src="{{ user.practice.image.url }}">
+		    <div class="media-body">
+		      <h2 class="account-heading">Recommended Content</h2>
+		      	<p class='article-content' style="text-align:justify">Hi, {{ user.username }}. Here are your two main areas for improvement:</p>
+		      	{% for skill in Skills %}
+			      	<li>{{ skill.skill }}</li>	
+				{% endfor %}
+			  <div class="media">
+				{% autoescape off %}
+				{{ Image }}
+				{% endautoescape %}
+		      </div>
+		    </div>
+		  </div>
+		</article>
+	</div>
+
+<div class="col-md-14">
+		<article class='media content-section'>
+		  <div class="media">
+		    <p class='article-content' style="text-align:justify">The following articles will help you to improve in these areas.</p>
+		  </div>
+		</article>
+	</div>
+
+
+	{% for item in Items %}
+		<article class='media content-section'>
+			<div class='media-body'>
+				<div class='article-metadata'>
+				<small>Topics:&emsp;</small>
+				{% for topic in item.topics %}
+					<small class='text-muted'>{{ topic }}&emsp;</small>
+				{% endfor %}
+				</div>
+				<h2><a class='article-title' href="{{ item.url }}">{{item.title}}</a></h2>
+
+				
+				{% if item.images|length > 0 %}
+					<div class="media">
+					{% for image in item.images %}
+						<img class="rounded mx-auto d-block border border-dark" alt='Image not Available' class="center" width="200" height="200" src="{{ image }}" hspace="50" vspace="50">
+					{% endfor %}
+					</div>
+				{% endif %}
+				
+
+				{% for paragraph in item.text %}
+					<p class='article-content' style="text-align:justify">{{ paragraph }}</p>
+				{% endfor %}
+			</div>
+		</article>
+	{% endfor %}
+
+
+
+
+{% endblock content %}

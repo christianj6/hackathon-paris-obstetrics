@@ -1,0 +1,33 @@
+{% extends 'example_app/base.html' %}
+
+<!-- We'll need to create a for loop and produce the thing below for each one!! -->
+{% block content %}
+	{% for item in Items %}
+		<article class='media content-section'>
+			<div class='media-body'>
+				<!-- <div class='article-metadata'> -->
+					<!-- <a class='mr-2' href="{{ item.url }}">Source</a><br> -->
+<!-- 				<small>Topics:&emsp;</small>
+				{% for topic in item.topics %}
+					<small class='text-muted'>{{ topic }}&emsp;</small>
+				{% endfor %} -->
+				<!-- </div> -->
+				<h2><a class='article-title' href="{{ item.url }}">{{item.title}}</a></h2>
+				<div class="media">
+				
+				{% if item.images|length > 0 %}
+
+					{% for image in item.images %}
+						<img class="rounded mx-auto d-block border border-dark" alt='Image not Available' class="center" width="300" height="200" src="{{ image }}" hspace="50" vspace="50">
+					{% endfor %}
+
+				{% endif %}
+				
+				</div>
+				{% for paragraph in item.text %}
+					<p class='article-content' style="text-align:justify">{{ paragraph }}</p>
+				{% endfor %}
+			</div>
+		</article>
+	{% endfor %}
+{% endblock content %}

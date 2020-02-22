@@ -22,12 +22,13 @@ from plotly.graph_objs import Bar
 
 
 class Item:
-	def __init__(self, title, url, topics, text, images):
+	def __init__(self, title, url, topics, text, images, id):
 		self.title = title
 		self.url = url
 		self.topics = topics
 		self.text = text
 		self.images = images
+		self.id = id
 
 class Skill:
 	def __init__(self, skill, value):
@@ -110,8 +111,8 @@ def practice(request):
 			url=row['url'],
 			topics=[k for k, v in eval(row['features']).items() if v > 0.1],
 			text=[paragraph for paragraph in row['text'].split('\n')],
-			images=[image for image in row['images'].replace('[', '').replace(']', '').replace("'", "").split(',') if image != 'None'][:1]
-
+			images=[image for image in row['images'].replace('[', '').replace(']', '').replace("'", "").split(',') if image != 'None'][:1],
+			id=row['id']
 			))
 
 

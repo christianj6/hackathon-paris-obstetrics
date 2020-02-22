@@ -34,7 +34,7 @@
 		</article>
 	</div>
 
-<div class="col-md-14">
+	<div class="col-md-14">
 		<article class='media content-section'>
 		  <div class="media">
 		    <p class='article-content' style="text-align:justify">The following articles will help you to improve in these areas.</p>
@@ -43,6 +43,13 @@
 	</div>
 
 
+<!-- these make the button work -->
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	
 	{% for item in Items %}
 		<article class='media content-section'>
 			<div class='media-body'>
@@ -52,26 +59,47 @@
 					<small class='text-muted'>{{ topic }}&emsp;</small>
 				{% endfor %}
 				</div>
-				<h2><a class='article-title' href="{{ item.url }}">{{item.title}}</a></h2>
+				<h3><a class='article-title' href="{{ item.url }}">{{item.title}}</a></h3>
 
-				
-				{% if item.images|length > 0 %}
-					<div class="media">
-					{% for image in item.images %}
-						<img class="rounded mx-auto d-block border border-dark" alt='Image not Available' class="center" width="200" height="200" src="{{ image }}" hspace="50" vspace="50">
-					{% endfor %}
-					</div>
-				{% endif %}
-				
-
-				{% for paragraph in item.text %}
-					<p class='article-content' style="text-align:justify">{{ paragraph }}</p>
-				{% endfor %}
+				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal{{item.id}}"> Read article </button>
 			</div>
 		</article>
+
+
+	<!-- button content (popup) starts here-->
+		<div class="modal fade" id="modal{{item.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  			<div class="modal-dialog modal-lg" role="document">
+    			<div class="modal-content">
+			    	<div class="modal-header">
+					      <h3 class="modal-title" id="exampleModalLabel">{{item.title}}</h3>
+	    			</div>
+     				
+     				<!-- article content & pictures get displayed here -->
+     				<div class="modal-body">
+						{% if item.images|length > 0 %}
+							<div class="media">
+								{% for image in item.images %}
+									<img class="rounded mx-auto d-block border border-dark" alt='Image not Available' class="center" width="200" height="200" src="{{ image }}" hspace="50" vspace="50">
+									{% endfor %}
+							</div>
+						{% endif %}
+						
+						{% for paragraph in item.text %}
+							<p class='article-content' style="text-align:justify">{{ paragraph }}</p>
+						{% endfor %}
+      				</div>
+      
+      				<!-- buttons on the popup-->
+			      	<div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				        <button type="button" class="btn btn-primary">Save to collection</button>
+   				        <button type="button" class="btn btn-primary" data-dismiss="modal">I'm finished!</button> 
+   				        <!-- add btn-lg to class to make button larger -->
+			     	 </div>
+    			</div>
+    		</div>
+    	</div>
+						
 	{% endfor %}
-
-
-
 
 {% endblock content %}

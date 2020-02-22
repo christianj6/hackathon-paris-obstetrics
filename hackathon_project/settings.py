@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['https://fairhackathon.herokuapp.com/']
 # Application definition
 
 INSTALLED_APPS = [
+    'buddy.apps.BuddyConfig',
     'example_app.apps.ExampleAppConfig',
     'users.apps.UsersConfig',
     'crispy_forms',

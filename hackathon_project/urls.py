@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path, include
 from users import views as user_views
+from buddy import views as buddy_views
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -26,7 +27,9 @@ urlpatterns = [
     path('practice/', user_views.practice, name='practice'),
     path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
+    path('buddy/', buddy_views.buddy, name='buddy-home'),
 
+    path('buddy/', include('buddy.urls')),
     path('', include('example_app.urls'))
 ]
 

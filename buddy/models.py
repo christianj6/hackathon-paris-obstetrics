@@ -1,64 +1,50 @@
 from django.db import models
-
-from django.db import models
+from django.contrib.auth.models import User
 from django.db.models import Count
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.auth import get_user_model
 
-User = get_user_model()
+# from django.conf import settings
 
 
-class Board(models.Model):
-    name = models.CharField(max_length=30, unique=True)
-    description = models.CharField(max_length=100)
+# rec user model which suggests the users for pairing
 
-    def __str__(self):
-        return self.name
-
-    def get_posts_count(self):
-        return Post.objects.filter(topic__board=self).count()
-
-    def get_last_post(self):
-        return Post.objects.filter(topic__board=self).order_by('-created_at').first()
-
-    def get_topic_count(self):
-        return Topic.objects.filter(board=self).count()
+	# pair_users
+		# keyed to each user
 
 
-class Topic(models.Model):
-    subject = models.CharField(max_length=255)
-    last_updated = models.DateTimeField(auto_now_add=True)
-    board = models.ForeignKey(
-        Board, on_delete=models.CASCADE, related_name='topics')
-    starter = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='topics')
-    views = models.PositiveIntegerField(default=0)
 
-    def get_reply_count(self):
-        return Post.objects.filter(topic=self).count()-1
+
+class RecommendedBuddies(models.Model):
+
+# 		# parse the practice db based on user's values
+# 		# exclude self
+# 		# suggest whatever other users according to relevant params
+# 		# return the list of relevant users
+# 		# will need to update this model when user updates prof
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    suggested_buddies = models.ManyToManyField(User, blank=True, related_name='suggested_buddies')
+    slug = models.SlugField()
 
     def __str__(self):
-        return self.subject
+        return str(self.user.username)
 
-    class Meta:
-        ordering = ("-last_updated",)
+    def get_absolute_url(self):
+    	return "/users/{}".format(self.slug)
 
+class InviteBuddy(models.Model):
+	to_user = models.ForeignKey(User, related_name='to_user', on_delete=models.CASCADE)
+	from_user = models.ForeignKey(User, related_name='from_user', on_delete=models.CASCADE)
 
-class Post(models.Model):
-    message = RichTextUploadingField()
-    topic = models.ForeignKey(
-        Topic, on_delete=models.CASCADE, related_name='posts')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(null=True)
-    created_by = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='posts')
-    updated_by = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, related_name='+')
+	def __str__(self):
+		return "From {}, to {}".format(self.from_user.username, self.to_user.username)
 
-    def __str__(self):
-        return self.message[:30]
+# class InviteBuddy(models.Model):
+# 	to_user = models.ForeignKey()
+# 	from_user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    class Meta:
-        ordering = ("-created_at",)
-
-# Create your models here.
+# class BoardBuddy(models.Model):
+	# this will pair a user with a single buddy
+	# and store all the content that is displayed on the board page
+	# # board model which stores the content from the paired users

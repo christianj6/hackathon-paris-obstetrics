@@ -1,111 +1,97 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+from django.conf import settings
+
+from .models import RecommendedBuddies, InviteBuddy
+# from django.views.generic import CreateView
 
 
-def buddy(request):
-	# return HttpResponse('<h1>Buddy Page</h1>')
-	return render(request, 'buddy/home.html')
+
+user = get_user_model()
+
+def create_recommended_buddies(request):
+	pass
+
+def buddy_list(request):
+	users = user.objects.exclude(username=request.user.username)
 
 
-from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse_lazy
-from django.utils import timezone
-from django.views.generic import ListView, DetailView, FormView, UpdateView, CreateView
-from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import TopicCreateForm, PostCreateForm
-from .models import Board, Topic, Post
+	# this should show the recommended buddies and you can send an invite
+
+	# should also show invites from other users
 
 
-class BoardListView(ListView):
-    template_name = "boards/board_list.html"
-    model = Board
-    paginate_by = 8
+	context = {'Users': users}
+	return render(request, 'buddy/home.html', context)
+
+def send_buddy_request(request, username):
+	if request.user.is_authenticated():
+		user = get_object_or_404(User, username=username)
+		frequest, created = FriendRequest.objects.get_or_create(
+			from_user=request.user,
+			to_user=user)
+		return HttpResponseRedirect('/users')
+
+def accept_buddy_request(request, username):
+	from_user = get_object_or_404(User, username=username)
+	frequest = InviteBuddy.objects.filter(from_user=from_user, to_user=request.user).first()
+	user1 = frequest.to_user
+	user2 = from_user
+	user1.RecommendedBuddies.suggested_buddies.add(user2.RecommendedBuddies)
+	user2.RecommendedBuddies.suggested_buddies.add(user1.RecommendedBuddies)
+	frequest.delete()
+	return HttpResponseRedirect('/users/{}'.format(request.user.RecommendedBuddies.slug))
+
+def delete_buddy_request(request, username):
+	from_user = get_object_or_404(User, username=username)
+	frequest = InviteBuddy.objects.filter(from_user=from_user, to_user=request.user).first()
+	frequest.delete()
+	return HttpResponseRedirect('/users/{}'.format(request.user.profile.slug))
+
+def recommended_buddies_view(request):
+	p, created = RecommendedBuddies.objects.get_or_create(user=request.user)
+
+	# p = RecommendedBuddies.objects.filter(user=request.user).first()
 
 
-class TopicListView(ListView):
-    template_name = "boards/topic_list.html"
-    paginate_by = 8
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["board"] = get_object_or_404(Board,pk=self.kwargs['pk'])
-        return context
+	u = p.user
+	sent_invites = InviteBuddy.objects.filter(from_user=p.user)
+	rec_invites = InviteBuddy.objects.filter(to_user=p.user)
 
-    def get_queryset(self):
-        queryset = Topic.objects.filter(board__id=self.kwargs['pk'])
-        return queryset
+	friends = p.suggested_buddies.all()
 
+	# is this user our friend
+	button_status = 'none'
+	# if p not in request.user.RecommendedBuddies.suggested_buddies.all():
+	# 	button_status = 'not_friend'
 
-class TopicCreateView(LoginRequiredMixin, FormView):
-    form_class = TopicCreateForm
-    template_name = "boards/new_topic.html"
+	# 	# if we have sent him a friend request
+	# 	if len(FriendRequest.objects.filter(
+	# 		from_user=request.user).filter(to_user=p.user)) == 1:
+	# 			button_status = 'friend_request_sent'
 
-    def form_valid(self, form):
-        topic = form.cleaned_data.get('topic')
-        message = form.cleaned_data.get('message')
-        board = get_object_or_404(Board, pk=self.kwargs['pk'])
-        new_topic = Topic.objects.create(
-            subject=topic, board=board, starter=self.request.user)
-        new_post = Post.objects.create(
-            message=message, topic=new_topic, created_by=self.request.user)
+	context = {
+		'u': u,
+		'button_status': button_status,
+		'friends_list': friends,
+		'sent_friend_requests': sent_invites,
+		'rec_friend_requests': rec_invites
+	}
 
-        return redirect('TopicList', self.kwargs['pk'])
+	return render(request, 'buddy/home.html', context)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['board'] = get_object_or_404(Board, pk=self.kwargs['pk'])
-        return context
+# def get_recommended_buddies(request):
+# 	users = User.objects.exclude(request.user)
 
 
-class TopicPostsView(DetailView):
-    model = Topic
-    template_name = "boards/topic_posts.html"
-
-    def get_object(self):
-        self.topic = get_object_or_404(
-            Topic, board__pk=self.kwargs['pk'], pk=self.kwargs['topic_pk'])
-        
-        return self.topic
-
-    def get_context_data(self, **kwargs):
-        session_key = 'viewed_topic_{}'.format(self.topic.pk) # <-- here
-        if not self.request.session.get(session_key, False):
-            self.topic.views += 1
-            self.topic.save()
-            self.request.session[session_key] = True           # <-- until here
-        return super().get_context_data(**kwargs)
 
 
-class PostUpdateView(LoginRequiredMixin, UpdateView):
-    model = Post
-    fields = ['message']
-    pk_url_kwarg = 'post_pk'
-    context_object_name = 'post'
-    template_name = "boards/update_post.html"
+# def board(request)
+	# we need to create this object upon pairing with a user
+	
 
-    def form_valid(self, form):
-        post = form.save(commit=False)
-        post.updated_by = self.request.user
-        post.updated_at = timezone.now()
-        post.save()
-        return redirect('TopicPosts', pk=post.topic.board.pk, topic_pk=post.topic.pk)
-
-
-class PostReplyView(LoginRequiredMixin,CreateView):
-    template_name = "boards/reply_topic.html"
-    form_class = PostCreateForm
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['topic'] = get_object_or_404(Topic, pk=self.kwargs['topic_pk'])
-        return context
-
-    def form_valid(self, form):
-        instance = form.save(commit=False)
-        instance.topic = get_object_or_404(
-            Topic, pk=self.kwargs['topic_pk'])
-        instance.created_by = self.request.user
-        return super().form_valid(form)
-
-    def get_success_url(self, **kwargs):
-        return reverse_lazy('TopicPosts', kwargs={'pk': self.kwargs['pk'], 'topic_pk': self.kwargs['topic_pk']})
+# 	# this parses the content from the board model
+# 	return render(request, 'buddy/board.html', )

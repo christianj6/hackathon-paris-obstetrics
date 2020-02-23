@@ -53,9 +53,10 @@
 					<small class='text-muted'>{{ topic }}&emsp;</small>
 				{% endfor %}
 				</div>
-				<h3><a class='article-title' href="{{ item.url }}">{{item.title}}</a></h3>
-
-				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal{{item.id}}"> Read article </button>
+				<h4 class="float-left"><a class='article-title' href="{{ item.url }}">{{item.title}}</a></h4>
+				<div class="float-right">
+				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal{{item.id}}"> Read article </button> 
+			</div>
 			</div>
 		</article>
 
@@ -87,11 +88,39 @@
       				<!-- buttons on the popup-->
 			      	<div class="modal-footer">
 				        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				        <button type="button" class="btn btn-primary">Save to collection</button>
-   				        <!-- <button type="button" class="btn btn-primary" data-dismiss="modal">I'm finished!</button>  -->
-   				        <form action="{{ 'update-proficiency' }}" method="GET">
+				        <button type="button" class="btn btn-primary">save </button>
+				        
+				        <form action="{{ 'save-resource' }}" method="GET">
+							<button class='btn btn-primary' type='submit' name="resource_id" value='{{ item.id }}'> Share with buddy </button>
+						</form>
+
+
+				        <form action="{{ 'update-proficiency' }}" method="GET">
 							<button class='btn btn-primary' type='submit' name="topics" value='{{ item.topics }}'> I'm finished! </button>
 						</form>
+
+						
+
+						<!-- if we want to implement a comment box, not yet finished -->
+						<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#textbox"> Save </button>
+							<div class="modal fade" id="textbox" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" widget="textarea">
+  							<div class="modal-dialog modal-lg" role="document">
+    						<div class="modal-content">
+			    			<div class="modal-header">
+					      		<h3 class="modal-title" id="exampleModalLabel">Take a note</h3>
+	    					</div>
+     				
+     						<div class="modal-body">
+								<form action="/your-name/" method="post">
+    							<label for="your_name">Your name: </label>
+    							<input id="your_name" type="text" name="your_name" value="{{ current_name }}">
+    							<input type="submit" value="OK">
+								</form>
+							</div>
+							</div>
+							</div>
+							</div> -->
+
    				        <!-- add btn-lg to class to make button larger -->
 			     	 </div>
     			</div>

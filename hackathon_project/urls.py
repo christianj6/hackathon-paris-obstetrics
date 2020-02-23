@@ -29,6 +29,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
     # path('buddy/', buddy_views.buddy, name='BoardList'),
     path('practice/update-proficiency/', user_views.update_proficiency, name='update-proficiency'),
+    path('practice/save-resource/', user_views.save_to_board, name='save-resource'),
 
     path('buddy/', include('buddy.urls')),
     path('', include('example_app.urls'))

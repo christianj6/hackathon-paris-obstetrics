@@ -71,18 +71,14 @@ def get_most_relevant(data, skills, topn=20):
 def recommend_articles(data, skills, topn=3):
     return get_most_relevant(data, skills).sample(n=topn) 
 
-# def send_buddy_request(request):
+@login_required
+def save_to_board(request):
+	if request.GET:
+		id = request.GET['resource_id']
 
-# 	if request.GET:
-# 		username = request.GET['username']
+		print(id)
 
-# 	# if request.user.is_authenticated():
-# 	user = get_object_or_404(User, username=username)
-# 	frequest, created = InviteBuddy.objects.get_or_create(
-# 		from_user=request.user,
-# 		to_user=user)
-
-# 	return redirect('buddy-home')
+	return redirect('practice')
 
 
 @login_required
@@ -150,7 +146,7 @@ def practice(request):
 	data.dropna()  # ignore rows that contain NaN values
 	data['id'] = pd.factorize(data.url)[0]  # add a column with a unique id for each url
 	
-	df = recommend_articles(data, skills)
+	df = get_most_relevant(data, skills)
 	df['images'] = df['images'].replace('[]', '[\'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-KQcs5WCy2Y5ZVeOuI1fcQnQBdhkuv4DrRKOSklirJ0pX7_vQ&s\']')
 
 	items = []

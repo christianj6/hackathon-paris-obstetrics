@@ -26,8 +26,6 @@ urlpatterns = [
     path('buddy-invite/', views.send_buddy_request, name='buddy-invite'),
     path('buddy-cancel/', views.delete_buddy_request, name='buddy-cancel'),
 	path('buddy-ignore/', views.ignore_buddy_request, name='buddy-ignore'),
-	path('buddy-accept/', views.accept_buddy_request, name='buddy-accept'),
-	path('buddy-board/', views.buddy_board_view, name='buddy-board'),
 
 ]
 

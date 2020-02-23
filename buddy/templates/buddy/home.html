@@ -33,14 +33,11 @@
 		{% for r_request in rec_friend_requests %}
 			<p><a href="{{ r_request.from_user.RecommendedBuddies.get_absolute_url }}">{{ r_request.from_user.username }}</a></p>
 <!-- 			<small><a class='btn btn-primary' href="/users/friend-request/accept/{{ r_request.from_user.username }}">Accept</a></small> -->
-			
-			<form action="{{ 'buddy-accept' }}" method="GET">
-				<button class='btn btn-outline-info' type='submit' name="username" value='{{ r_request.from_user.username }}'>Accept</button>
-			</form>
 
+<!-- 			<small><a class='btn btn-warning' href="/users/friend-request/delete/{{ r_request.from_user.username }}">Ignore</a></small> -->
 
 			<form action="{{ 'buddy-ignore' }}" method="GET">
-				<button class='btn btn-outline-info' type='submit' name="username" value='{{ r_request.from_user.username }}'>Ignore</button>
+				<button class='btn btn-outline-info' type='submit' name="username" value='{{ r_request.from_user.username }}'>Ignore?</button>
 			</form>
 
 		{% endfor %}

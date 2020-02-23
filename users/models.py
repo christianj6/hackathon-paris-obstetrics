@@ -25,7 +25,6 @@ class Practice(models.Model):
 	# insert much more logic here for the practice scenario
 	# add all the other fields we want
 
-
 	def __str__(self):
 		return f"{self.user.username}'s Practice Content"
 

@@ -7,14 +7,6 @@ from django.contrib.auth import get_user_model
 # from django.conf import settings
 
 
-# rec user model which suggests the users for pairing
-
-	# pair_users
-		# keyed to each user
-
-
-
-
 class RecommendedBuddies(models.Model):
 
 # 		# parse the practice db based on user's values
@@ -25,13 +17,14 @@ class RecommendedBuddies(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     suggested_buddies = models.ManyToManyField(User, blank=True, related_name='suggested_buddies')
-    slug = models.SlugField()
+    # slug = models.SlugField()
 
     def __str__(self):
         return str(self.user.username)
 
-    def get_absolute_url(self):
-    	return "/friend-request/send/{}".format(self.slug)
+    # def get_absolute_url(self):
+    # 	return "/friend-request/send/{}".format(self.slug)
+
 
 class InviteBuddy(models.Model):
 	to_user = models.ForeignKey(User, related_name='to_user', on_delete=models.CASCADE)
@@ -40,11 +33,19 @@ class InviteBuddy(models.Model):
 	def __str__(self):
 		return "From {}, to {}".format(self.from_user.username, self.to_user.username)
 
-# class InviteBuddy(models.Model):
-# 	to_user = models.ForeignKey()
-# 	from_user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-# class BoardBuddy(models.Model):
-	# this will pair a user with a single buddy
-	# and store all the content that is displayed on the board page
-	# # board model which stores the content from the paired users
+# class ContentID(models.model):
+#     value = models.CharField(max_length=30)
+
+#     def __str__(self):
+#         return self.value
+
+# class BuddyBoard(models.Model):
+	# buddy_1 = models.ForeignKey(User, related_name='buddy_1', on_delete=models.CASCADE)
+	# buddy_2 = models.ForeignKey(User, related_name='buddy_2', on_delete=models.CASCADE)
+	# buddy_content = models.ManyToManyField(ContentID, blank=True, related_name='buddy_content')
+
+	# def __str__(self):
+	# 	return "Board for {} and {}".format(self.buddy_1.username, self.buddy_2.username)
+
+	# we can just append many id of the content items and look these up in the csv

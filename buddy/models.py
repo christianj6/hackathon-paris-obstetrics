@@ -31,7 +31,7 @@ class RecommendedBuddies(models.Model):
         return str(self.user.username)
 
     def get_absolute_url(self):
-    	return "/users/{}".format(self.slug)
+    	return "/friend-request/send/{}".format(self.slug)
 
 class InviteBuddy(models.Model):
 	to_user = models.ForeignKey(User, related_name='to_user', on_delete=models.CASCADE)

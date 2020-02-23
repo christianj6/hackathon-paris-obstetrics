@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
@@ -14,25 +14,34 @@ user = get_user_model()
 def create_recommended_buddies(request):
 	pass
 
-def buddy_list(request):
-	users = user.objects.exclude(username=request.user.username)
+def send_buddy_request(request):
+	# group = Group.objects.get(pk=pk)
+ #    group.status = Status.approved
+ #    group.save()
+	if request.GET:
+		username = request.GET['username']
+
+	# if request.user.is_authenticated():
+	user = get_object_or_404(User, username=username)
+	frequest, created = InviteBuddy.objects.get_or_create(
+		from_user=request.user,
+		to_user=user)
+
+	return redirect('buddy-home')
 
 
-	# this should show the recommended buddies and you can send an invite
-
-	# should also show invites from other users
 
 
-	context = {'Users': users}
-	return render(request, 'buddy/home.html', context)
 
-def send_buddy_request(request, username):
-	if request.user.is_authenticated():
-		user = get_object_or_404(User, username=username)
-		frequest, created = FriendRequest.objects.get_or_create(
-			from_user=request.user,
-			to_user=user)
-		return HttpResponseRedirect('/users')
+
+	# return HttpResponseRedirect(request, 'buddy/home.html')
+
+
+def delete_buddy_request(request, username):
+	from_user = get_object_or_404(User, username=username)
+	frequest = InviteBuddy.objects.filter(from_user=from_user, to_user=request.user).first()
+	frequest.delete()
+	return HttpResponseRedirect('/users/{}'.format(request.user.profile.slug))
 
 def accept_buddy_request(request, username):
 	from_user = get_object_or_404(User, username=username)
@@ -44,27 +53,25 @@ def accept_buddy_request(request, username):
 	frequest.delete()
 	return HttpResponseRedirect('/users/{}'.format(request.user.RecommendedBuddies.slug))
 
-def delete_buddy_request(request, username):
-	from_user = get_object_or_404(User, username=username)
-	frequest = InviteBuddy.objects.filter(from_user=from_user, to_user=request.user).first()
-	frequest.delete()
-	return HttpResponseRedirect('/users/{}'.format(request.user.profile.slug))
+
 
 def recommended_buddies_view(request):
-	p, created = RecommendedBuddies.objects.get_or_create(user=request.user)
+	# p, created = RecommendedBuddies.objects.get_or_create(user=request.user)
 
-	# p = RecommendedBuddies.objects.filter(user=request.user).first()
+	p = RecommendedBuddies.objects.filter(user=request.user).first()
 
+	users = user.objects.exclude(username=request.user.username)
+	# TODO: Add more logic to filter users based on current user's skills.
 
+	u = request.user
+	# u = p.user
+	sent_invites = InviteBuddy.objects.filter(from_user=request.user)
+	rec_invites = InviteBuddy.objects.filter(to_user=request.user)
 
-	u = p.user
-	sent_invites = InviteBuddy.objects.filter(from_user=p.user)
-	rec_invites = InviteBuddy.objects.filter(to_user=p.user)
-
-	friends = p.suggested_buddies.all()
+	# users = p.suggested_buddies.all()
 
 	# is this user our friend
-	button_status = 'none'
+	button_status = 'not_friend'
 	# if p not in request.user.RecommendedBuddies.suggested_buddies.all():
 	# 	button_status = 'not_friend'
 
@@ -76,7 +83,7 @@ def recommended_buddies_view(request):
 	context = {
 		'u': u,
 		'button_status': button_status,
-		'friends_list': friends,
+		'rec_buddy_list': users,
 		'sent_friend_requests': sent_invites,
 		'rec_friend_requests': rec_invites
 	}

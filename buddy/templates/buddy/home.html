@@ -6,8 +6,17 @@
 
 		<h1>Recommended Buddies</h1>
 		
-		{% for friend in friends_list %}
-			<a href="{{ friend.user.RecommendedBuddies.get_absolute_url }}">{{ friend.user.username }}</a>
+		{% for buddy in rec_buddy_list %}
+
+			<form action="{{ 'buddy-invite' }}" method="GET">
+				<button class='btn btn-outline-info' type='submit' name="username" value='{{ buddy.username }}'>Invite {{ buddy.username }}</button>
+			</form>
+
+
+
+
+		<!-- display user info too -->
+
 		{% endfor %}
 		<hr>
 		<h2>Sent Buddy Requests</h2>

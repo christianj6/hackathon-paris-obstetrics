@@ -7,7 +7,7 @@ from .models import Practice
 from django.contrib.auth.models import User
 import json
 import io
-import decimal
+
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -71,56 +71,6 @@ def get_most_relevant(data, skills, topn=20):
 def recommend_articles(data, skills, topn=3):
     return get_most_relevant(data, skills).sample(n=topn) 
 
-# def send_buddy_request(request):
-
-# 	if request.GET:
-# 		username = request.GET['username']
-
-# 	# if request.user.is_authenticated():
-# 	user = get_object_or_404(User, username=username)
-# 	frequest, created = InviteBuddy.objects.get_or_create(
-# 		from_user=request.user,
-# 		to_user=user)
-
-# 	return redirect('buddy-home')
-
-
-@login_required
-def update_proficiency(request):
-	if request.GET:
-		topics = eval(request.GET['topics'])
-
-	user=request.user
-	for topic in topics:
-		if topic == 'Psychological Distress':
-			user.practice.f_psychology += decimal.Decimal(0.1)
-		elif topic == 'Pre-Pregnancy':
-			user.practice.f_prepregnancy += decimal.Decimal(0.1)
-		elif topic == 'Research':
-			user.practice.f_research += decimal.Decimal(0.1)
-		elif topic == 'Retained Placenta':
-			user.practice.f_placenta += decimal.Decimal(0.1)
-		elif topic == 'Administer Medication':
-			user.practice.f_medication += decimal.Decimal(0.1)
-		elif topic == 'Fetal':
-			user.practice.f_fetus += decimal.Decimal(0.1)
-		elif topic == 'Communication':
-			user.practice.f_communication += decimal.Decimal(0.1)
-		elif topic == 'Assess Risks':
-			user.practice.f_risks += decimal.Decimal(0.1)
-		elif topic == 'Breastfeeding':
-			user.practice.f_breastfeed += decimal.Decimal(0.1)
-		elif topic == 'Post-Natal Complications: Bleeding':
-			user.practice.f_bleeding += decimal.Decimal(0.1)
-		elif topic == 'Tool Knowledge':
-			user.practice.f_tools += decimal.Decimal(0.1)
-
-		
-		user.practice.save()
-
-	return redirect('practice')
-
-		
 
 @login_required
 def practice(request):

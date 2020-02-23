@@ -11,52 +11,8 @@ from .models import RecommendedBuddies, InviteBuddy
 
 user = get_user_model()
 
-def create_recommended_buddies(request):
-	pass
-
-def send_buddy_request(request):
-	if request.GET:
-		username = request.GET['username']
-
-	user = get_object_or_404(User, username=username)
-	frequest, created = InviteBuddy.objects.get_or_create(
-		from_user=request.user,
-		to_user=user)
-
-	return redirect('buddy-home')
-
-def delete_buddy_request(request):
-	if request.GET:
-		username = request.GET['username']
-
-	from_user = get_object_or_404(User, username=request.user)
-	to_user = get_object_or_404(User, username=username)
-	frequest = InviteBuddy.objects.filter(from_user=from_user, to_user=to_user).first()
-	frequest.delete()
-	return redirect('buddy-home')
-
-
-def ignore_buddy_request(request):
-	if request.GET:
-		username = request.GET['username']
-
-	from_user = get_object_or_404(User, username=username)
-	to_user = get_object_or_404(User, username=request.user)
-	frequest = InviteBuddy.objects.filter(from_user=from_user, to_user=to_user).first()
-	frequest.delete()
-	return redirect('buddy-home')
-
-def accept_buddy_request(request, username):
-	from_user = get_object_or_404(User, username=username)
-	frequest = InviteBuddy.objects.filter(from_user=from_user, to_user=request.user).first()
-	user1 = frequest.to_user
-	user2 = from_user
-	user1.RecommendedBuddies.suggested_buddies.add(user2.RecommendedBuddies)
-	user2.RecommendedBuddies.suggested_buddies.add(user1.RecommendedBuddies)
-	frequest.delete()
-	return HttpResponseRedirect('/users/{}'.format(request.user.RecommendedBuddies.slug))
-
-
+# def create_recommended_buddies(request):
+# 	pass
 
 def recommended_buddies_view(request):
 	# p, created = RecommendedBuddies.objects.get_or_create(user=request.user)
@@ -92,6 +48,80 @@ def recommended_buddies_view(request):
 	}
 
 	return render(request, 'buddy/home.html', context)
+
+def send_buddy_request(request):
+	if request.GET:
+		username = request.GET['username']
+
+	user = get_object_or_404(User, username=username)
+	frequest, created = InviteBuddy.objects.get_or_create(
+		from_user=request.user,
+		to_user=user)
+
+	return redirect('buddy-home')
+
+def delete_buddy_request(request):
+	if request.GET:
+		username = request.GET['username']
+
+	from_user = get_object_or_404(User, username=request.user)
+	to_user = get_object_or_404(User, username=username)
+	frequest = InviteBuddy.objects.filter(from_user=from_user, to_user=to_user).first()
+	frequest.delete()
+	return redirect('buddy-home')
+
+
+def ignore_buddy_request(request):
+	if request.GET:
+		username = request.GET['username']
+
+	from_user = get_object_or_404(User, username=username)
+	to_user = get_object_or_404(User, username=request.user)
+	frequest = InviteBuddy.objects.filter(from_user=from_user, to_user=to_user).first()
+	frequest.delete()
+	return redirect('buddy-home')
+
+def accept_buddy_request(request):
+	# accepts the buddy username
+	# creates a new board object pairing the new users
+	# redirects to the board page
+	# shows the content from the board
+	# board parses and shows content from both users just like before
+	if request.GET:
+		username = request.GET['username']
+
+	other_user = get_object_or_404(User, username=username)
+	current_user = request.user
+	# buddy_board, created = BuddyBoard.objects.get_or_create(
+	# 	buddy_1=current_user,
+	# 	buddy_2=other_user)
+	# sent_invites_other = InviteBuddy.objects.filter(from_user=other_user)
+	# sent_invites_current = InviteBuddy.objects.filter(from_user=current_user)
+	# sent_invites_other.delete()
+	# sent_invites_current.delete()
+
+
+	return redirect('buddy-board')
+	# user1 = frequest.to_user
+	# user2 = from_user
+	# user1.RecommendedBuddies.suggested_buddies.add(user2.RecommendedBuddies)
+	# user2.RecommendedBuddies.suggested_buddies.add(user1.RecommendedBuddies)
+	# frequest.delete()
+	# return HttpResponseRedirect('/users/{}'.format(request.user.RecommendedBuddies.slug))
+
+def buddy_board_view(request):
+	# parse the content of the buddy board and display it like previously
+	# we'll need to get the IDs from the csv
+
+	context = {"": ""}
+
+	return render(request, 'buddy/board.html', context)
+	# somehow make this the default if they have the object already created
+	# ie redirect from home upon clicking home
+
+
+
+
 
 # def get_recommended_buddies(request):
 # 	users = User.objects.exclude(request.user)

@@ -59,11 +59,7 @@
 			</div>
 		</article>
 
-<!-- <form action="/your-name/" method="post">
-    <label for="your_name">Your name: </label>
-    <input id="your_name" type="text" name="your_name" value="{{ current_name }}">
-    <input type="submit" value="OK">
-</form> -->
+			
 
 	<!-- button content (popup) starts here-->
 		<div class="modal fade" id="modal{{item.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -92,7 +88,10 @@
 			      	<div class="modal-footer">
 				        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 				        <button type="button" class="btn btn-primary">Save to collection</button>
-   				        <button type="button" class="btn btn-primary" data-dismiss="modal">I'm finished!</button> 
+   				        <!-- <button type="button" class="btn btn-primary" data-dismiss="modal">I'm finished!</button>  -->
+   				        <form action="{{ 'update-proficiency' }}" method="GET">
+							<button class='btn btn-primary' type='submit' name="topics" value='{{ item.topics }}'> I'm finished! </button>
+						</form>
    				        <!-- add btn-lg to class to make button larger -->
 			     	 </div>
     			</div>

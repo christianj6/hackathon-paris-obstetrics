@@ -15,13 +15,9 @@ def create_recommended_buddies(request):
 	pass
 
 def send_buddy_request(request):
-	# group = Group.objects.get(pk=pk)
- #    group.status = Status.approved
- #    group.save()
 	if request.GET:
 		username = request.GET['username']
 
-	# if request.user.is_authenticated():
 	user = get_object_or_404(User, username=username)
 	frequest, created = InviteBuddy.objects.get_or_create(
 		from_user=request.user,
@@ -29,19 +25,26 @@ def send_buddy_request(request):
 
 	return redirect('buddy-home')
 
+def delete_buddy_request(request):
+	if request.GET:
+		username = request.GET['username']
 
-
-
-
-
-	# return HttpResponseRedirect(request, 'buddy/home.html')
-
-
-def delete_buddy_request(request, username):
-	from_user = get_object_or_404(User, username=username)
-	frequest = InviteBuddy.objects.filter(from_user=from_user, to_user=request.user).first()
+	from_user = get_object_or_404(User, username=request.user)
+	to_user = get_object_or_404(User, username=username)
+	frequest = InviteBuddy.objects.filter(from_user=from_user, to_user=to_user).first()
 	frequest.delete()
-	return HttpResponseRedirect('/users/{}'.format(request.user.profile.slug))
+	return redirect('buddy-home')
+
+
+def ignore_buddy_request(request):
+	if request.GET:
+		username = request.GET['username']
+
+	from_user = get_object_or_404(User, username=username)
+	to_user = get_object_or_404(User, username=request.user)
+	frequest = InviteBuddy.objects.filter(from_user=from_user, to_user=to_user).first()
+	frequest.delete()
+	return redirect('buddy-home')
 
 def accept_buddy_request(request, username):
 	from_user = get_object_or_404(User, username=username)

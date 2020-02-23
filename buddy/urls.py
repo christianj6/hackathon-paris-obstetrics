@@ -24,7 +24,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('', views.recommended_buddies_view, name='buddy-home'),
     path('buddy-invite/', views.send_buddy_request, name='buddy-invite'),
-    # url(r'^friend-request/send/(?P<id>[\w-]+)/$', views.send_buddy_request),)
+    path('buddy-cancel/', views.delete_buddy_request, name='buddy-cancel'),
+	path('buddy-ignore/', views.ignore_buddy_request, name='buddy-ignore'),
 
 ]
 

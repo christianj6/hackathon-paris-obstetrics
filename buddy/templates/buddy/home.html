@@ -12,9 +12,6 @@
 				<button class='btn btn-outline-info' type='submit' name="username" value='{{ buddy.username }}'>Invite {{ buddy.username }}</button>
 			</form>
 
-
-
-
 		<!-- display user info too -->
 
 		{% endfor %}
@@ -23,6 +20,11 @@
 		<ul>
 		{% for s_request in sent_friend_requests %}
 			<li>{{ s_request.to_user.username }}</li>
+			<form action="{{ 'buddy-cancel' }}" method="GET">
+				<button class='btn btn-outline-info' type='submit' name="username" value='{{ s_request.to_user.username }}'>Cancel invite?</button>
+			</form>
+
+
 		{% endfor %}
 		</ul>
 		<hr>
@@ -30,8 +32,14 @@
 		
 		{% for r_request in rec_friend_requests %}
 			<p><a href="{{ r_request.from_user.RecommendedBuddies.get_absolute_url }}">{{ r_request.from_user.username }}</a></p>
-			<small><a class='btn btn-primary' href="/users/friend-request/accept/{{ r_request.from_user.username }}">Accept</a></small>
-			<small><a class='btn btn-warning' href="/users/friend-request/delete/{{ r_request.from_user.username }}">Ignore</a></small>
+<!-- 			<small><a class='btn btn-primary' href="/users/friend-request/accept/{{ r_request.from_user.username }}">Accept</a></small> -->
+
+<!-- 			<small><a class='btn btn-warning' href="/users/friend-request/delete/{{ r_request.from_user.username }}">Ignore</a></small> -->
+
+			<form action="{{ 'buddy-ignore' }}" method="GET">
+				<button class='btn btn-outline-info' type='submit' name="username" value='{{ r_request.from_user.username }}'>Ignore?</button>
+			</form>
+
 		{% endfor %}
 		
 

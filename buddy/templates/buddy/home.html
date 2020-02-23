@@ -1,5 +1,15 @@
 {% extends 'example_app/base.html' %}
 
+<style type="text/css">
+.container-name div {
+    display: inline-block;
+	width: 500px;
+	min-height: 50px;
+	background-color: #ff0000;
+	height: auto;
+  }
+</style>
+
 {% block content %}
 	
 	{% if request.user == u %}
@@ -8,11 +18,26 @@
 		
 		{% for buddy in rec_buddy_list %}
 
-			<form action="{{ 'buddy-invite' }}" method="GET">
-				<button class='btn btn-outline-info' type='submit' name="username" value='{{ buddy.username }}'>Invite {{ buddy.username }}</button>
-			</form>
+		<article class='media content-section'>
+			
+			<div class='media-body'>
+				<h4 class="float-left">{{buddy.username}}</h4> 
 
-		<!-- display user info too -->
+				<div class="float-right">
+					<form action="{{ 'buddy-invite' }}" method="GET">
+						<button class='btn btn-outline-info' type='submit' name="username" value='{{ buddy.username }}'>Invite {{ buddy.username }}</button>
+					</form>	
+				</div>
+
+				<br><br>
+
+				<div>Their skills are:</div>
+					<!-- display user info here -->
+
+			</div>
+	</article>
+
+
 
 		{% endfor %}
 		<hr>

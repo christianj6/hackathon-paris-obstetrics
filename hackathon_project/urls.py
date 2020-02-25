@@ -30,6 +30,7 @@ urlpatterns = [
     # path('buddy/', buddy_views.buddy, name='BoardList'),
     path('practice/update-proficiency/', user_views.update_proficiency, name='update-proficiency'),
     path('practice/save-resource/', user_views.save_to_board, name='save-resource'),
+    path('practice/assessment/', user_views.assessment, name='assessment'),
 
     path('buddy/', include('buddy.urls')),
     path('', include('example_app.urls'))

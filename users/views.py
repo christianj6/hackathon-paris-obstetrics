@@ -21,8 +21,33 @@ from plotly.graph_objs import Bar
 from django.db.models import Q
 from buddy.models import BuddyBoard, ContentID
 
+from django import forms
+
 
 # import plotly.graph_objs as go
+
+class AssessmentForm(forms.Form):
+
+    proficiency_choices = (
+        ('NONE', 'No Knowledge'),
+        ('BEGINNER', 'Some Knowledge'),
+        ('INTERMEDIATE', 'Intermediate Knowledge'),
+        ('ADEPT', 'Very Good Knowledge'),
+        ('EXPERT', 'Expert Knowledge'),
+
+    )
+
+    Psychological_Distress_Management = forms.ChoiceField(choices=proficiency_choices, widget=forms.Select)
+    Providing_Ante_Natal_Care = forms.ChoiceField(choices=proficiency_choices, widget=forms.Select)
+    Research_Knowledge = forms.ChoiceField(choices=proficiency_choices, widget=forms.Select)
+    Treating_Retained_Placenta = forms.ChoiceField(choices=proficiency_choices, widget=forms.Select)
+    Administering_Medication = forms.ChoiceField(choices=proficiency_choices, widget=forms.Select)
+    Handling_Fetal_Risks = forms.ChoiceField(choices=proficiency_choices, widget=forms.Select)
+    Appropriate_Communication = forms.ChoiceField(choices=proficiency_choices, widget=forms.Select)
+    Risk_Assessment = forms.ChoiceField(choices=proficiency_choices, widget=forms.Select)
+    Advising_New_Mothers_About_Breastfeeding = forms.ChoiceField(choices=proficiency_choices, widget=forms.Select)
+    Treating_Post_Natal_Complications = forms.ChoiceField(choices=proficiency_choices, widget=forms.Select)
+    Using_Specialized_Tools = forms.ChoiceField(choices=proficiency_choices, widget=forms.Select)
 
 
 class Item:
@@ -52,6 +77,68 @@ def register(request):
 	else:
 		form = UserRegisterForm()
 	return render(request, 'users/register.html', {'form': form})
+
+
+@login_required
+def assessment(request):
+
+	proficiency_mapping = {
+
+				'NONE': 0.0,
+				'BEGINNER': 0.2,
+				'INTERMEDIATE': 0.4,
+				'ADEPT': 0.7,
+				'EXPERT': 0.9
+
+	}
+
+
+	if request.method == 'POST':
+		form = AssessmentForm(request.POST)
+		if form.is_valid():
+			prof_f_psychology = form.cleaned_data.get('Psychological_Distress_Management')
+			prof_f_prepregnancy = form.cleaned_data.get('Providing_Ante_Natal_Care')
+			prof_f_research = form.cleaned_data.get('Research_Knowledge')
+			prof_f_placenta = form.cleaned_data.get('Treating_Retained_Placenta')
+			prof_f_medication = form.cleaned_data.get('Administering_Medication')
+			prof_f_fetus = form.cleaned_data.get('Handling_Fetal_Risks')
+			prof_f_communication = form.cleaned_data.get('Appropriate_Communication')
+			prof_f_risks = form.cleaned_data.get('Risk_Assessment')
+			prof_f_breastfeed = form.cleaned_data.get('Advising_New_Mothers_About_Breastfeeding')
+			prof_f_bleeding = form.cleaned_data.get('Treating_Post_Natal_Complications')
+			prof_f_tools = form.cleaned_data.get('Using_Specialized_Tools')
+
+			Practice.objects.create(
+								user = request.user,
+								f_psychology = proficiency_mapping.get(prof_f_psychology),
+								f_prepregnancy = proficiency_mapping.get(prof_f_prepregnancy),
+								f_research = proficiency_mapping.get(prof_f_research),
+								f_placenta = proficiency_mapping.get(prof_f_placenta),
+								f_medication = proficiency_mapping.get(prof_f_medication),
+								f_fetus = proficiency_mapping.get(prof_f_fetus),
+								f_communication = proficiency_mapping.get(prof_f_communication),
+								f_risks = proficiency_mapping.get(prof_f_risks),
+								f_breastfeed = proficiency_mapping.get(prof_f_breastfeed),
+								f_bleeding = proficiency_mapping.get(prof_f_bleeding),
+								f_tools = proficiency_mapping.get(prof_f_tools),
+
+				)
+
+
+
+			messages.success(request, f'You are now able to access the content page.')
+			return redirect('practice')
+
+	else:
+		form = AssessmentForm()
+
+	return render(request, 'users/assessment.html', {'form': form})
+
+	
+	# redirected here from practice if not Practice object
+	# otherwise they just go to the content page
+
+	# logic to process the html form to create a new practice object for the user
 
 
 # the lowest n skills of the user
@@ -127,7 +214,9 @@ def update_proficiency(request):
 @login_required
 def practice(request):
 
-	Practice.objects.get_or_create(user=request.user)
+	if not Practice.objects.filter(user=request.user).exists():
+		# print('it worked')
+		return redirect('assessment')
 
 	current_user = request.user
 	practice = Practice.objects.filter(user=current_user)[0]

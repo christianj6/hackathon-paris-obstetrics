@@ -46,6 +46,7 @@ def register(request):
 		if form.is_valid():
 			form.save()
 			username = form.cleaned_data.get('username')
+
 			messages.success(request, f'Welcome {username}. You are now able to log in.')
 			return redirect('login')
 	else:
@@ -128,6 +129,8 @@ def update_proficiency(request):
 @login_required
 def practice(request):
 
+	Practice.objects.get_or_create(user=request.user)
+
 	current_user = request.user
 	practice = Practice.objects.filter(user=current_user)[0]
 	skills = {
@@ -151,7 +154,7 @@ def practice(request):
 	data = pd.read_csv('data_04.csv')
 	data.columns = ['title', 'url', 'topics', 'text', 'features', 'images'] # rename the columns for easier access
 	data.dropna()  # ignore rows that contain NaN values
-	data['id'] = pd.factorize(data.url)[0]  # add a column with a unique id for each url
+	# data['id'] = pd.factorize(data.url)[0]  # add a column with a unique id for each url
 	
 	df = get_most_relevant(data, skills)
 	df['images'] = df['images'].replace('[]', '[\'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-KQcs5WCy2Y5ZVeOuI1fcQnQBdhkuv4DrRKOSklirJ0pX7_vQ&s\']')
@@ -166,7 +169,7 @@ def practice(request):
 			topics=[k for k, v in eval(row['features']).items() if v > 0.1],
 			text=[paragraph for paragraph in row['text'].split('\n')],
 			images=[image for image in row['images'].replace('[', '').replace(']', '').replace("'", "").split(',') if image != 'None'][:1],
-			id=row['id']
+			id=index
 			))
 
 

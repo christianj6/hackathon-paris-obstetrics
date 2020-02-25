@@ -26,6 +26,11 @@ class Item:
 
 def recommended_buddies_view(request):
 	# p, created = RecommendedBuddies.objects.get_or_create(user=request.user)
+	board = BuddyBoard.objects.filter(Q(buddy_1 = request.user) | Q(buddy_2 = request.user))
+	if board.exists():
+		print('it worked')
+		return redirect('buddy-board')
+
 
 	p = RecommendedBuddies.objects.filter(user=request.user).first()
 
@@ -116,7 +121,9 @@ def accept_buddy_request(request):
 def buddy_board_view(request):
 	# parse the content of the buddy board and display it like previously
 	# we'll need to get the IDs from the csv
+
 	board = BuddyBoard.objects.filter(Q(buddy_1 = request.user) | Q(buddy_2 = request.user)).first()
+
 	content = []
 	for ids in board.buddy_content.all():
 		content.append(ids.value)
@@ -127,9 +134,10 @@ def buddy_board_view(request):
 	data = pd.read_csv('data_04.csv')
 	data.columns = ['title', 'url', 'topics', 'text', 'features', 'images'] # rename the columns for easier access
 	data.dropna()  # ignore rows that contain NaN values
-	data['id'] = pd.factorize(data.url)[0]  # add a column with a unique id for each url
+	# data['id'] = pd.factorize(data.url)[0]  # add a column with a unique id for each url
 	
-	df = data[data['id'].isin(content)]
+	df = data.iloc[content]
+	# df = data[data['id'].isin(content)]
 	df['images'] = df['images'].replace('[]', '[\'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-KQcs5WCy2Y5ZVeOuI1fcQnQBdhkuv4DrRKOSklirJ0pX7_vQ&s\']')
 	items = []
 	for index, row in df.iterrows():
@@ -140,7 +148,7 @@ def buddy_board_view(request):
 			topics=[k for k, v in eval(row['features']).items() if v > 0.1],
 			text=[paragraph for paragraph in row['text'].split('\n')],
 			images=[image for image in row['images'].replace('[', '').replace(']', '').replace("'", "").split(',') if image != 'None'][:1],
-			id=row['id']
+			id=index
 			))
 
 

@@ -120,8 +120,10 @@ def buddy_board_view(request):
 	content = []
 	for ids in board.buddy_content.all():
 		content.append(ids.value)
-	print(content)
+	practice_buddy1 = Practice.objects.get(user=board.buddy_1)
+	practice_buddy2 = Practice.objects.get(user=board.buddy_2)
 
+	
 	data = pd.read_csv('data_04.csv')
 	data.columns = ['title', 'url', 'topics', 'text', 'features', 'images'] # rename the columns for easier access
 	data.dropna()  # ignore rows that contain NaN values
@@ -142,7 +144,7 @@ def buddy_board_view(request):
 			))
 
 
-
+	
 	context = {"Items": items}
 
 	return render(request, 'buddy/board.html', context)

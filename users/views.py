@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 import json
 import io
 import decimal
-
+import requests
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.backends.backend_agg import FigureCanvasAgg
@@ -57,6 +57,7 @@ def register(request):
 def get_lowest_skills(skill_set, lowestn=2):
     return {k: v for k, v in sorted(skill_set.items(), key=lambda item: item[1])[:lowestn]}.keys()
 
+
 # for each article compute the average of the n features relevant to the user (lowest_n)
 def article_rating(features, skills):
     for skill in skills:
@@ -70,6 +71,8 @@ def get_most_relevant(data, skills, topn=20):
     # based on the n lowest skills of the user, create a new column in the dataframe titled relevance
     data['relevance'] = data.apply(lambda x: best_article_rating(x['features'], get_lowest_skills(skills)), axis=1)
     # return the n most relevant articles
+    data.iloc[0, data.columns.get_loc('relevance')] = 111
+
     return data.sort_values(by=['relevance']).nlargest(topn, 'relevance')
 
 def recommend_articles(data, skills, topn=3):
@@ -122,7 +125,6 @@ def update_proficiency(request):
 	return redirect('practice')
 
 		
-
 @login_required
 def practice(request):
 
@@ -153,6 +155,7 @@ def practice(request):
 	
 	df = get_most_relevant(data, skills)
 	df['images'] = df['images'].replace('[]', '[\'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-KQcs5WCy2Y5ZVeOuI1fcQnQBdhkuv4DrRKOSklirJ0pX7_vQ&s\']')
+	endpoint = "https://ttp.mllp.upv.es/X5gon/lib/online_mt.php"
 
 	items = []
 	for index, row in df.iterrows():
@@ -165,6 +168,7 @@ def practice(request):
 			images=[image for image in row['images'].replace('[', '').replace(']', '').replace("'", "").split(',') if image != 'None'][:1],
 			id=row['id']
 			))
+
 
 
 	skills_new = [

@@ -1,0 +1,29 @@
+{% extends 'example_app/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+	<h1>Initial Assessment</h1>
+		<article class='media content-section'>
+			<div class='media-body'>
+				<img class="rounded mx-auto d-block border border-dark" alt='Image not Available' class="center" width="300" height="200" src="https://onlinenursing.cn.edu/sites/default/files/styles/blogfeature_large/public/field/image/CNU-what-makes-a-good-health-assessment-compressed.jpg?itok=kfT7eqwl" hspace="50" vspace="50">
+				<p class='article-content' style="text-align:justify">Please provide a subjective assessment of your confidence with each of the below skills. This will help to recommend content which is most suitable to your knowledge that you may continue to develop your proficiencies.</a></p>
+<br><br><br>
+				<div class="media">
+				
+
+			<div class='content-section'>
+				<form method='POST'>
+					{% csrf_token %}
+					<fieldset class='form-group'>
+						<legend class='border-bottom mb-4'>Subjective Assessment</legend>
+						{{ form|crispy }}
+					</fieldset>
+					<div class='form-group'>
+						<button class='btn btn-outline-info' type='submit'>Confirm</button>
+					</div>
+				</form>
+
+			</div>
+		</article>
+
+{% endblock content %}

@@ -34,18 +34,18 @@ class InviteBuddy(models.Model):
 		return "From {}, to {}".format(self.from_user.username, self.to_user.username)
 
 
-# class ContentID(models.model):
-#     value = models.CharField(max_length=30)
+class ContentID(models.Model):
+    value = models.CharField(max_length=30)
 
-#     def __str__(self):
-#         return self.value
+    def __str__(self):
+        return self.value
 
-# class BuddyBoard(models.Model):
-	# buddy_1 = models.ForeignKey(User, related_name='buddy_1', on_delete=models.CASCADE)
-	# buddy_2 = models.ForeignKey(User, related_name='buddy_2', on_delete=models.CASCADE)
-	# buddy_content = models.ManyToManyField(ContentID, blank=True, related_name='buddy_content')
+class BuddyBoard(models.Model):
+	buddy_1 = models.ForeignKey(User, related_name='buddy_1', on_delete=models.CASCADE)
+	buddy_2 = models.ForeignKey(User, related_name='buddy_2', on_delete=models.CASCADE)
+	buddy_content = models.ManyToManyField(ContentID, blank=True, related_name='buddy_content')
 
-	# def __str__(self):
-	# 	return "Board for {} and {}".format(self.buddy_1.username, self.buddy_2.username)
+	def __str__(self):
+		return "Board for {} and {}".format(self.buddy_1.username, self.buddy_2.username)
 
 	# we can just append many id of the content items and look these up in the csv

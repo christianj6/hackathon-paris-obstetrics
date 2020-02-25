@@ -25,13 +25,13 @@
 
 				<div class="float-right">
 					<form action="{{ 'buddy-invite' }}" method="GET">
-						<button class='btn btn-outline-info' type='submit' name="username" value='{{ buddy.username }}'>Invite {{ buddy.username }}</button>
+						<button class='btn btn-primary' type='submit' name="username" value='{{ buddy.username }}'>Invite {{ buddy.username }}</button>
 					</form>	
 				</div>
 
 				<br><br>
 
-				<div>Their skills are:</div>
+				<!-- <div>Their skills are:</div> -->
 					<!-- display user info here -->
 
 			</div>
@@ -42,31 +42,56 @@
 		{% endfor %}
 		<hr>
 		<h2>Sent Buddy Requests</h2>
-		<ul>
 		{% for s_request in sent_friend_requests %}
-			<li>{{ s_request.to_user.username }}</li>
-			<form action="{{ 'buddy-cancel' }}" method="GET">
-				<button class='btn btn-outline-info' type='submit' name="username" value='{{ s_request.to_user.username }}'>Cancel invite?</button>
+
+		<article class='media content-section'>
+			
+			<div class='media-body'>
+				<a class="float-left">{{ s_request.to_user.username }}</a> 
+
+				<div class="float-right">
+					<form action="{{ 'buddy-cancel' }}" method="GET">
+				<button class='btn btn-outline-info  btn-sm' type='submit' name="username" value='{{ s_request.to_user.username }}'>Cancel invite?</button>
 			</form>
+				</div>
+
+				<br><br>
+
+				<!-- <div>Their skills are:</div> -->
+					<!-- display user info here -->
+
+			</div>
+	</article>
+			
 
 
 		{% endfor %}
-		</ul>
 		<hr>
 		<h2>Received Buddy Requests</h2>
 		
 		{% for r_request in rec_friend_requests %}
-			<p><a href="{{ r_request.from_user.RecommendedBuddies.get_absolute_url }}">{{ r_request.from_user.username }}</a></p>
+
+<article class='media content-section'>
+			
+			<div class='media-body'>
+
+			<p><h4>{{ r_request.from_user.username }}</h4></p>
+				<div class="float-right">
+					<form action="{{ 'buddy-accept' }}" method="GET">
+				<button class='btn btn-success' type='submit' name="username" value='{{ r_request.from_user.username }}'>Accept</button>
+			</form>
+			<form action="{{ 'buddy-ignore' }}" method="GET">
+				<button class='btn btn-default btn-sm' type='submit' name="username" value='{{ r_request.from_user.username }}'>Ignore</button>
+			</form>
+				</div>
+
+
+			</div>
+	</article>
+
 <!-- 			<small><a class='btn btn-primary' href="/users/friend-request/accept/{{ r_request.from_user.username }}">Accept</a></small> -->
 			
-			<form action="{{ 'buddy-accept' }}" method="GET">
-				<button class='btn btn-outline-info' type='submit' name="username" value='{{ r_request.from_user.username }}'>Accept</button>
-			</form>
-
-
-			<form action="{{ 'buddy-ignore' }}" method="GET">
-				<button class='btn btn-outline-info' type='submit' name="username" value='{{ r_request.from_user.username }}'>Ignore</button>
-			</form>
+			
 
 		{% endfor %}
 		

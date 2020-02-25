@@ -18,6 +18,10 @@ import matplotlib
 from django.shortcuts import render
 from plotly.offline import plot
 from plotly.graph_objs import Bar
+from django.db.models import Q
+from buddy.models import BuddyBoard, ContentID
+
+
 # import plotly.graph_objs as go
 
 
@@ -75,8 +79,9 @@ def recommend_articles(data, skills, topn=3):
 def save_to_board(request):
 	if request.GET:
 		id = request.GET['resource_id']
-
-		print(id)
+	board = BuddyBoard.objects.filter(Q(buddy_1 = request.user) | Q(buddy_2 = request.user)).first()
+	content_id, created = ContentID.objects.get_or_create(value = id)
+	board.buddy_content.add(content_id)
 
 	return redirect('practice')
 

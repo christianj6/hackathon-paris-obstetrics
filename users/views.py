@@ -26,13 +26,15 @@ from buddy.models import BuddyBoard, ContentID
 
 
 class Item:
-	def __init__(self, title, url, topics, text, images, id):
+	def __init__(self, title, url, topics, text, images, id, text_es="", title_es=""):
 		self.title = title
 		self.url = url
 		self.topics = topics
 		self.text = text
 		self.images = images
 		self.id = id
+		self.text_es = text_es
+		self.title_es = title_es
 
 class Skill:
 	def __init__(self, skill, value):
@@ -151,15 +153,16 @@ def practice(request):
 
 	# items = [k for k, v in skills.items()]
 
-	data = pd.read_csv('data_04.csv')
-	data.columns = ['title', 'url', 'topics', 'text', 'features', 'images'] # rename the columns for easier access
+	data = pd.read_csv('data_04_es.csv')
+	print(data.columns)
+	data.columns = ['title', 'url', 'topics', 'text', 'features', 'images', 'es', 'title_es'] # rename the columns for easier access
 	data.dropna()  # ignore rows that contain NaN values
 	# data['id'] = pd.factorize(data.url)[0]  # add a column with a unique id for each url
 	
 	df = get_most_relevant(data, skills)
 	df['images'] = df['images'].replace('[]', '[\'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-KQcs5WCy2Y5ZVeOuI1fcQnQBdhkuv4DrRKOSklirJ0pX7_vQ&s\']')
 	endpoint = "https://ttp.mllp.upv.es/X5gon/lib/online_mt.php"
-
+	print(df.iloc[0, df.columns.get_loc('es')])
 	items = []
 	for index, row in df.iterrows():
 		items.append(Item(
@@ -169,9 +172,10 @@ def practice(request):
 			topics=[k for k, v in eval(row['features']).items() if v > 0.1],
 			text=[paragraph for paragraph in row['text'].split('\n')],
 			images=[image for image in row['images'].replace('[', '').replace(']', '').replace("'", "").split(',') if image != 'None'][:1],
-			id=index
+			id=index,
+			text_es=row['es'],
+			title_es=row['title_es']
 			))
-
 
 
 	skills_new = [

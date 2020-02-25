@@ -6,6 +6,7 @@ from django.conf import settings
 from django.db.models import Q
 
 from .models import RecommendedBuddies, InviteBuddy, BuddyBoard, ContentID
+from users.models import Practice
 # from django.views.generic import CreateView
 import pandas as pd
 

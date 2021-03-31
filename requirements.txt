@@ -26,7 +26,7 @@ docx2txt==0.6
 gensim==3.8.1
 html-to-text==1.0.0
 html2text==2018.1.9
-lxml==4.3.3
+lxml==4.6.3
 matplotlib==3.1.2
 numpy==1.16.3
 nltk==3.4.1

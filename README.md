@@ -20,8 +20,8 @@ For the detailed project proposal, our final presentation, and a demonstrational
 
 # todo
 
-- [ ] more motivational information in overview
+- [x] more motivational information in overview
 - [ ] image
 - [ ] setup
 - [ ] usage
-- [ ] 
+- [ ] tighten security

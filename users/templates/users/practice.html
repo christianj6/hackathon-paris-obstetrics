@@ -1,4 +1,4 @@
-{% extends 'example_app/base.html' %}
+{% extends 'home/base.html' %}
 {% load crispy_forms_tags %}
 
 <style type="text/css">
@@ -10,7 +10,6 @@
 	height: auto;
   }
 </style>
-
 
 {% block content %}
 <div class="container-name">
@@ -33,11 +32,7 @@
 		    </div>
 		  </div>
 		</article>
-
-
 	</div>
-
-
 
 	{% for item in Items %}
 		<article class='media content-section'>
@@ -51,12 +46,9 @@
 				<h4 class="float-left"><a class='article-title' href="{{ item.url }}">{{item.title}}</a></h4>
 				<div class="float-right">
 				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal{{item.id}}"> Read article </button>
-				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal{{item.id}}_es"> Leer artículo </button>
 			</div>
 			</div>
 		</article>
-
-			
 
 	<!-- button content (popup) starts here-->
 		<div class="modal fade" id="modal{{item.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -84,86 +76,19 @@
       				<!-- buttons on the popup-->
 			      	<div class="modal-footer">
 				        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				        <!-- <button type="button" class="btn btn-primary">save </button> -->
 
 				        <form action="{{ 'save-resource' }}" method="GET">
 							<button class='btn btn-primary' type='submit' name="resource_id" value='{{ item.id }}'> Share with buddy </button>
 						</form>
 
-
 				        <form action="{{ 'update-proficiency' }}" method="GET">
 							<button class='btn btn-primary' type='submit' name="topics" value='{{ item.topics }}'> I'm finished! </button>
 						</form>
-
-						
-
-						<!-- if we want to implement a comment box, not yet finished -->
-						<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#textbox"> Save </button>
-							<div class="modal fade" id="textbox" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" widget="textarea">
-  							<div class="modal-dialog modal-lg" role="document">
-    						<div class="modal-content">
-			    			<div class="modal-header">
-					      		<h3 class="modal-title" id="exampleModalLabel">Take a note</h3>
-	    					</div>
-     				
-     						<div class="modal-body">
-								<form action="/your-name/" method="post">
-    							<label for="your_name">Your name: </label>
-    							<input id="your_name" type="text" name="your_name" value="{{ current_name }}">
-    							<input type="submit" value="OK">
-								</form>
-							</div>
-							</div>
-							</div>
-							</div> -->
-
-   				        <!-- add btn-lg to class to make button larger -->
 			     	 </div>
     			</div>
     		</div>
     	</div>
-						
 
-    	<!-- spanish button content (popup) starts here-->
-		<div class="modal fade" id="modal{{item.id}}_es" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  			<div class="modal-dialog modal-lg" role="document">
-    			<div class="modal-content">
-			    	<div class="modal-header">
-					      <h3 class="modal-title" id="exampleModalLabel">{{item.title_es}}</h3>
-	    			</div>
-     				
-     				<!-- article content & pictures get displayed here -->
-     				<div class="modal-body">
-						{% if item.images|length > 0 %}
-							<div class="media">
-								{% for image in item.images %}
-									<img class="rounded mx-auto d-block border border-dark" alt='Image not Available' class="center" width="200" height="200" src="{{ image }}" hspace="50" vspace="50">
-									{% endfor %}
-							</div>
-						{% endif %}
-						
-							<p class='article-content' style="text-align:justify">{{ item.text_es }}</p>
-      				</div>
-      
-      				<!-- buttons on the popup-->
-			      	<div class="modal-footer">
-				        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				        <!-- <button type="button" class="btn btn-primary">save </button> -->
-
-				        <form action="{{ 'save-resource' }}" method="GET">
-							<button class='btn btn-primary' type='submit' name="resource_id" value='{{ item.id }}'> Share with buddy </button>
-						</form>
-
-
-				        <form action="{{ 'update-proficiency' }}" method="GET">
-							<button class='btn btn-primary' type='submit' name="topics" value='{{ item.topics }}'> I'm finished! </button>
-						</form>
-
-					
-			     	 </div>
-    			</div>
-    		</div>
-    	</div>
 
 	{% endfor %}
 </div>

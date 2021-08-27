@@ -1,0 +1,25 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+	{% for item in Items %}
+		<article class='media content-section'>
+			<div class='media-body'>
+				<h2><a class='article-title' href="{{ item.url }}">{{item.title}}</a></h2>
+				<div class="media">
+				
+				{% if item.images|length > 0 %}
+
+					{% for image in item.images %}
+						<img class="rounded mx-auto d-block border border-dark" alt='Image not Available' class="center" width="300" height="200" src="{{ image }}" hspace="50" vspace="50">
+					{% endfor %}
+
+				{% endif %}
+				
+				</div>
+				{% for paragraph in item.text %}
+					<p class='article-content' style="text-align:justify">{{ paragraph }}</p>
+				{% endfor %}
+			</div>
+		</article>
+	{% endfor %}
+{% endblock content %}

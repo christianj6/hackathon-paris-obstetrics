@@ -1,48 +1,19 @@
-{% extends 'example_app/base.html' %}
+{% extends 'home/base.html' %}
+{% load static %}
+
 {% block content %}
 		<article class='media content-section'>
 
 			<div class='media-body'>
 	<h1>Welcome to your buddy board!</h1>
 
-				<img class="rounded mx-auto d-block border border-dark" alt='Image not Available' class="center" width="300" height="200" src="https://concentrichealthcare.com/wp-content/uploads/2019/07/2_1200x800.jpg" hspace="50" vspace="50">
+				<img class="rounded mx-auto d-block border border-dark" alt='Image not Available' class="center" width="300" height="200" src="{% static 'img/buddy.jpg' %}" hspace="50" vspace="50">
 				<p class='article-content' style="text-align:justify">This board shows the content which you and your buddy have shared with each other. Please be sure to keep your buddy updated on any articles which you have found useful that you may take advantage of the chance to learn together!</a></p>
-				<!-- <div class='article-metadata'> -->
-					<!-- <a class='mr-2' href="{{ item.url }}">Source</a><br> -->
-<!-- 				<small>Topics:&emsp;</small>
-				{% for topic in item.topics %}
-					<small class='text-muted'>{{ topic }}&emsp;</small>
-				{% endfor %} -->
-				<!-- </div> -->
-				<!-- <h2><a class='article-title' href="{{ item.url }}"></a></h2> -->
 				<div class="media">
-				
-<!-- 				{% if item.images|length > 0 %}
 
-					{% for image in item.images %} -->
-
-					{% endfor %}
-
-				<!-- {% endif %} -->
-				
-				<!-- </div> -->
-				<!-- {% for paragraph in item.text %} -->
-
-				<!-- {% endfor %} -->
 			</div>
 		</article>
 		
-
-<!-- <div class="col-lg-14">
-		<article class='media content-section'>
-		  <div class="media">
-		    <p class='article-content' style="text-align:justify">These are the articles you and your learning buddy have saved. </p>
-		  </div>
-		</article>
-	</div> -->
-
-
-
 	{% for item in Items %}
 		<article class='media content-section'>
 			<div class='media-body'>
@@ -58,8 +29,6 @@
 			</div>
 			</div>
 		</article>
-
-			
 
 		<div class="modal fade" id="modal{{item.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   			<div class="modal-dialog modal-lg" role="document">
@@ -86,11 +55,6 @@
 				        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
     				        <button type="button" class="btn btn-primary" data-dismiss="modal">I'm finished!</button>
 
-				     
-
-
-				      <!--   <form action="{{ 'update-proficiency' }}" method="GET">
-							<button class='btn btn-primary' type='submit' name="topics" value='{{ item.topics }}'> I'm finished! </button> -->
 						</form>
 					</div>
 				</div>
@@ -100,130 +64,4 @@
 						
 {% endfor%}
 
-	
-
 {% endblock content %}
-
-<!-- 
-
-<style type="text/css">
-.container-name div {
-    display: inline-block;
-	width: 500px;
-	min-height: 50px;
-	background-color: #eee;
-	height: auto;
-  }
-</style>
-
-<div class="container-name">
-	<div class="row">
-  <div class="col-lg-14">.col-sm-4</div>
-  <div class="col-lg-14">.col-sm-4</div>
-  <div class="col-lg-14">.col-sm-4</div>
-</div>
-	<div class="col-md-14">
-		<article class='media content-section'>
-		  <div class="media">
-		    <div class="media-body">
-		      <h2 class="account-heading">Welcome to your board!</h2>
-		      	 <p class='article-content' style="text-align:justify">Hi, {{ user.username }}. Here are your two main areas for improvement:</p>
-		      	{% for skill in Skills %}
-			      	<li>{{ skill.skill }}</li>	
-				{% endfor %} 
-			
-		    </div>
-		  </div>
-		</article>
-	</div>
-
-	<div class="col-lg-14">
-		<article class='media content-section'>
-		  <div class="media">
-		    <p class='article-content' style="text-align:justify">These are the articles you and your learning buddy have saved. </p>
-		  </div>
-		</article>
-	</div>
-
-
-
-	{% for item in Items %}
-		<article class='media content-section'>
-			<div class='media-body'>
-				<div class='article-metadata'>
-				<small>Topics:&emsp;</small>
-				{% for topic in item.topics %}
-					<small class='text-muted'>{{ topic }}&emsp;</small>
-				{% endfor %}
-				</div>
-				<h4 class="float-left"><a class='article-title' href="{{ item.url }}">{{item.title}}</a></h4>
-				<div class="float-right">
-				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal{{item.id}}"> Read article </button> 
-			</div>
-			</div>
-		</article>
-
-			
-
-		<div class="modal fade" id="modal{{item.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  			<div class="modal-dialog modal-lg" role="document">
-    			<div class="modal-content">
-			    	<div class="modal-header">
-					      <h3 class="modal-title" id="exampleModalLabel">{{item.title}}</h3>
-	    			</div>
-     				
-     				article content & pictures get displayed here
-     				<div class="modal-body">
-						{% if item.images|length > 0 %}
-							<div class="media">
-								{% for image in item.images %}
-									<img class="rounded mx-auto d-block border border-dark" alt='Image not Available' class="center" width="200" height="200" src="{{ image }}" hspace="50" vspace="50">
-									{% endfor %}
-							</div>
-						{% endif %}
-						
-						{% for paragraph in item.text %}
-							<p class='article-content' style="text-align:justify">{{ paragraph }}</p>
-						{% endfor %}
-      				</div>
-      
-			      	<div class="modal-footer">
-				        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				     
-
-
-				        <form action="{{ 'update-proficiency' }}" method="GET">
-							<button class='btn btn-primary' type='submit' name="topics" value='{{ item.topics }}'> I'm finished! </button>
-						</form>
-
-						
-
-						 if we want to implement a comment box, not yet finished -->
-						<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#textbox"> Save </button>
-							<div class="modal fade" id="textbox" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" widget="textarea">
-  							<div class="modal-dialog modal-lg" role="document">
-    						<div class="modal-content">
-			    			<div class="modal-header">
-					      		<h3 class="modal-title" id="exampleModalLabel">Take a note</h3>
-	    					</div>
-     				
-     						<div class="modal-body">
-								<form action="/your-name/" method="post">
-    							<label for="your_name">Your name: </label>
-    							<input id="your_name" type="text" name="your_name" value="{{ current_name }}">
-    							<input type="submit" value="OK">
-								</form>
-							</div>
-							</div>
-							</div>
-							</div> -->
-
-   				        <!-- add btn-lg to class to make button larger
-			     	 </div>
-    			</div>
-    		</div>
-    	</div>
-						
-	{% endfor %}
-</div>
- -->

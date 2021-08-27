@@ -4,7 +4,7 @@ Improving midwife education via obstetrics e-learning content recommender system
 
 ---
 
-![](https://raw.githubusercontent.com/christianj6/hackathon-paris-obstetrics/refactor/docs/image.png)
+![](https://raw.githubusercontent.com/christianj6/hackathon-paris-obstetrics/master/docs/image.png)
 
 ### Overview
 

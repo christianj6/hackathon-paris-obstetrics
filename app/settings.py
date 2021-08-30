@@ -3,7 +3,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
-DEBUG = bool(os.environ.get("DEBUG"))
+DEBUG = bool(int(os.environ.get("DEBUG")))
 ALLOWED_HOSTS = [
     "localhost",
     "hackathon.christianalbertjohnson.com",
